@@ -1,0 +1,9 @@
+[syntax]
+level = "LuaJIT"
+
+[indent]
+kind = "Space"
+width = 2
+
+[spacing]
+space_before_lambda_func_paren = false
