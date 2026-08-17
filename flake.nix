@@ -143,7 +143,7 @@
       inputs.rustowl.overlays.default
       (import "${inputs.statix}/overlay.nix")
       (
-        final: prev: let
+        _final: prev: let
           inherit (prev.stdenv.hostPlatform) system;
         in {
           # lua
@@ -163,13 +163,11 @@
               cargoLock.lockFile = src + "/Cargo.lock";
               buildAndTestSubdir = "crates/emmylua_formatter";
               strictDeps = true;
-              # nativeBuildInputs = [ prev.pkg-config ];
-              # buildInputs = [ prev.openssl ];
-              # env.OPENSSL_NO_VENDOR = 1;
             };
 
           # rust
           bacon-ls = inputs.bacon-ls.defaultPackage.${system};
+
           fenix = prev.fenix.complete.withComponents [
             "cargo"
             "clippy"
@@ -182,44 +180,30 @@
           nu-lint = inputs.nu-lint.packages.${system}.default;
 
           # nixpkgs-master channel (kept for ad-hoc use)
-          master = import inputs.nixpkgs-master {
-            inherit system;
-            config = {
-              inherit (final.config) allowBroken allowInsecure allowUnfree;
-            };
-          };
-
-          # python-lsp-ruff fails its tests; relax it so pylsp can use it
-          pythonPackagesExtensions =
-            prev.pythonPackagesExtensions
-            ++ [
-              (
-                _final: p: {
-                  python-lsp-ruff = p.ruff.overrideAttrs (_old: {
-                    doCheck = false;
-                    pythonImportsCheck = [];
-                  });
-                }
-              )
-            ];
+          master = import inputs.nixpkgs-master (branchConfig system);
         }
       )
     ];
 
-    # Build a pkgs set with our overlays + allowUnfree for a given system.
-    mkPkgs = system:
-      import nixpkgs {
-        inherit system;
-        overlays = dependencyOverlays;
-        config.allowUnfree = true;
+    branchConfig = system: {
+      overlays = dependencyOverlays;
+      config = {
+        allowBroken = true;
+        allowInsecure = true;
+        allowUnfree = true;
       };
+      inherit system;
+    };
+
+    # Build a pkgs set with our overlays + allowUnfree for a given system.
+    mkPkgs = system: import nixpkgs (branchConfig system);
 
     eachSystem = f: nixpkgs.lib.genAttrs systems (system: f (mkPkgs system));
 
-    module = nixpkgs.lib.modules.importApply ./module.nix inputs;
+    module = nixpkgs.lib.modules.importApply ./nix/module.nix inputs;
     wrapper = wrappers.lib.evalModule module;
 
-    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix);
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {

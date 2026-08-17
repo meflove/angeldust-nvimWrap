@@ -1,20 +1,19 @@
 return {
   {
     "clangd",
-    root_markers = {
-      "compile_commands.json",
-      "compile_flags.txt",
-      "configure.ac", -- AutoTools
-      "Makefile",
-      "configure.ac",
-      "configure.in",
-      "config.h.in",
-      "meson.build",
-      "meson_options.txt",
-      "build.ninja",
-      ".git"
-    },
     lsp = {
+      root_markers = {
+        "compile_commands.json",
+        "compile_flags.txt",
+        "configure.ac", -- AutoTools
+        "Makefile",
+        "configure.in",
+        "config.h.in",
+        "meson.build",
+        "meson_options.txt",
+        "build.ninja",
+        ".git"
+      },
       filetypes = { "c", "cpp" },
       settings = {
         clangd = {

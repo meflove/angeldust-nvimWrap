@@ -1,6 +1,6 @@
 -- nvim-lint setup. runtime deps (yamllint, statix, demjson3, eslint_d, clangtidy, ...)
--- are provided by config.specs.lint.runtimePkgs in module.nix.
-nixInfo.lze.load({
+-- are provided by config.specs.*.runtimePkgs in nix/langs.nix.
+return {
   {
     "nvim-lint",
     auto_enable = true,
@@ -20,10 +20,11 @@ nixInfo.lze.load({
       }
 
       vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "BufReadPost", "InsertLeave" }, {
+        group = vim.api.nvim_create_augroup("nvim_lint", { clear = true }),
         callback = function()
           lint.try_lint()
         end
       })
     end
   }
-})
+}

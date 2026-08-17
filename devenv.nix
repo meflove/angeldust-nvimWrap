@@ -42,7 +42,6 @@
 
       # Lua specific hooks
       lua-ls.enable = true;
-      stylua.enable = true;
     };
   };
 }

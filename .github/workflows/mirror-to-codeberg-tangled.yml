@@ -2,7 +2,7 @@
 name: Mirror to Codeberg & Tangled
 run-name: mirror to codeberg & tangled
 permissions:
-  contents: write
+  contents: read
 on:
   push:
     branches: [main]

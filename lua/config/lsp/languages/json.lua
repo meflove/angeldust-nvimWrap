@@ -1,10 +1,8 @@
 return {
   {
     "jsonls",
-    root_markers = {
-      ".git"
-    },
     lsp = {
+      root_markers = { ".git" },
       filetypes = { "json" },
       settings = {
         json = {

@@ -8,7 +8,7 @@ end
 local okCat, catppuccin = pcall(require, "catppuccin")
 if okCat then
   catppuccin.setup({
-    flavour = "macchiato",
+    flavour = "auto",
     integrations = {
       gitsigns = true,
       lualine = true,
@@ -21,9 +21,9 @@ if okCat then
       },
       flash = true,
       indent_blankline = {
-        enabled = true,
+        enabled = false,
         scope_color = "mauve", -- catppuccin color (eg. `lavender`) Default: text
-        colored_indent_levels = false
+        colored_indent_levels = true
       },
       treesitter_context = true,
       markview = true,

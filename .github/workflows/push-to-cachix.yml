@@ -2,7 +2,7 @@
 name: Push to Cachix
 run-name: push to cachix
 permissions:
-  contents: write
+  contents: read
 on:
   push:
     branches: [main]
@@ -27,7 +27,7 @@ jobs:
         with:
           name: meflove
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - name: Build nixCats
+      - name: Build wrapped Neovim
         run: nix build .#default -o result --print-build-logs
       - name: Push to Cachix
         if: github.ref == 'refs/heads/main'

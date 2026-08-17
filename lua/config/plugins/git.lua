@@ -3,6 +3,10 @@ return {
     "gitsigns.nvim",
     auto_enable = true,
     event = "DeferredUIEnter",
+    wk = {
+      { "<leader>g", group = "[g]it" },
+      { "<leader>g_", hidden = true }
+    },
     after = function()
       require("gitsigns").setup({
         -- See `:help gitsigns.txt`

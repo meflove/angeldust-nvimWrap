@@ -21,7 +21,7 @@
           "-euc"
           ''
             for file in "$@"; do
-              ${luafmt} --write $file
+              ${luafmt} --write "$file"
             done
           ''
           "--"
@@ -54,22 +54,6 @@
         "*.nix"
       ];
     };
-
-    #lua
-    # stylua = {
-    #   enable = true;
-    #   priority = 1;
-    #   includes = [
-    #     "*.lua"
-    #   ];
-    # };
-    # emmylua = {
-    #   enable = true;
-    #   priority = 1;
-    #   includes = [
-    #     "*.lua"
-    #   ];
-    # };
 
     # md
     prettier = {

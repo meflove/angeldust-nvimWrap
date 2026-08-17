@@ -1,10 +1,8 @@
 return {
   {
     "nu-lint",
-    root_markers = {
-      ".git"
-    },
     lsp = {
+      root_markers = { ".git" },
       filetypes = { "nu" },
       cmd = { "nu-lint", "--lsp" },
       settings = {}

@@ -1,15 +1,13 @@
 return {
   {
     "yamlls",
-    root_markers = {
-      ".git"
-    },
     load = function(name)
       -- Load SchemaStore plugin before yamlls configuration
       vim.cmd.packadd("SchemaStore.nvim")
       vim.cmd.packadd(name)
     end,
     lsp = {
+      root_markers = { ".git" },
       filetypes = { "yaml", "yaml.docker-compose", "yaml.gitlab", "yaml.helm-values" },
       settings = {
         yaml = {

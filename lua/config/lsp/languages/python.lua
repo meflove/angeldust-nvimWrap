@@ -1,18 +1,14 @@
+-- root markers shared by both python servers (ruff, ty)
+local python_root_markers = {
+  "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", "ruff.toml", ".ruff.toml",
+  "pyrightconfig.json", ".git"
+}
+
 return {
   {
     "ruff",
-    root_markers = {
-      "pyproject.toml",
-      "setup.py",
-      "setup.cfg",
-      "requirements.txt",
-      "Pipfile",
-      "ruff.toml",
-      ".ruff.toml",
-      "pyrightconfig.json",
-      ".git"
-    },
     lsp = {
+      root_markers = python_root_markers,
       filetypes = { "python" },
       settings = {
         ruff = {
@@ -40,18 +36,8 @@ return {
   },
   {
     "ty",
-    root_markers = {
-      "pyproject.toml",
-      "setup.py",
-      "setup.cfg",
-      "requirements.txt",
-      "Pipfile",
-      "ruff.toml",
-      ".ruff.toml",
-      "pyrightconfig.json",
-      ".git"
-    },
     lsp = {
+      root_markers = python_root_markers,
       filetypes = { "python" },
       settings = {
         ty = {

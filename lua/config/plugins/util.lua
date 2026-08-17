@@ -8,15 +8,26 @@ return {
         options = {
           multiple_diag_under_cursor = true,
           show_all_diags_on_cursorline = true,
-          multilines = true,
-        },
+          multilines = true
+        }
       })
       vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostic
-    end,
+    end
+  },
+  {
+    "nvim-autopairs",
+    auto_enable = true,
+    after = function()
+      require("nvim-autopairs").setup({})
+    end
   },
   {
     "grug-far.nvim",
     auto_enable = true,
+    wk = {
+      { "<leader>s", group = "[s]earch" },
+      { "<leader>s_", hidden = true }
+    },
     keys = {
       {
         "<leader>sr",
@@ -26,17 +37,17 @@ return {
           grug.open({
             transient = true,
             prefills = {
-              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
-            },
+              filesFilter = ext and ext ~= "" and "*." .. ext or nil
+            }
           })
         end,
         mode = { "n", "v", "x" },
-        desc = "Search and Replace",
-      },
+        desc = "Search and Replace"
+      }
     },
     after = function()
       require("grug-far").setup({})
-    end,
+    end
   },
   {
     "rooter",
@@ -44,6 +55,7 @@ return {
     on_plugin = { "ctags" },
     after = function()
       require("rooter").setup({
+        outermost = true,
         root_patterns = {
           "flake.nix",
           ".git/",
@@ -51,15 +63,15 @@ return {
           ".hg/",
           "Cargo.toml",
           "go.mod",
-          "package.json",
-        },
+          "package.json"
+        }
       })
-    end,
+    end
   },
   {
     "job",
     auto_enable = true,
-    on_plugin = { "ctags" },
+    on_plugin = { "ctags" }
   },
   {
     "ctags",
@@ -70,6 +82,7 @@ return {
       vim.cmd.packadd(name)
     end,
     after = function()
+      vim.g.gtags_ctags_bin = "ctags-wrapped"
       require("ctags").setup()
 
       local function update_ctags_option()
@@ -83,7 +96,7 @@ return {
         vim.o.tags = table.concat(tags, ",")
       end
       require("rooter").reg_callback(update_ctags_option)
-    end,
+    end
   },
   {
     "bafa",
@@ -95,13 +108,13 @@ return {
           require("bafa.ui").toggle()
         end,
         desc = "List open buffers",
-        noremap = true,
-      },
+        noremap = true
+      }
     },
     after = function()
       require("bafa").setup({
         notify = {
-          provider = "vim.notify",
+          provider = "vim.notify"
         },
         style = "minimal",
         ui = {
@@ -129,17 +142,18 @@ return {
               "n",
               "m",
               ",",
-              ".",
-            },
-          },
+              "."
+            }
+          }
         },
-        diagnostics = true,
+        diagnostics = true
       })
-    end,
+    end
   },
   {
     "kikao",
     auto_enable = true,
+    event = "BufReadPost",
     after = function()
       require("kikao").setup({
         session_file_name = nil,
@@ -156,17 +170,22 @@ return {
           "kulala://",
           "NeogitStatus",
           "health://",
-        },
+          "gitsigns://"
+        }
       })
-    end,
+    end
   },
   {
     "deltaview",
     auto_enable = true,
+    wk = {
+      { "<leader>d", group = "[d]iff" },
+      { "<leader>d_", hidden = true }
+    },
     keys = {
       { "<leader>dm", "<cmd>DeltaMenu <CR>", mode = { "n" }, noremap = true, desc = "DeltaMenu" },
       { "<leader>dl", "<cmd>DeltaView <CR>", mode = { "n" }, noremap = true, desc = "DeltaView" },
-      { "<leader>da", "<cmd>Delta <CR>", mode = { "n" }, noremap = true, desc = "Delta" },
+      { "<leader>da", "<cmd>Delta <CR>", mode = { "n" }, noremap = true, desc = "Delta" }
     },
     after = function()
       require("deltaview").setup({
@@ -180,9 +199,9 @@ return {
           next_diff = "]f",
           prev_diff = "[f",
           fzf_toggle = "alt-;",
-          help_legend = "d?",
-        },
+          help_legend = "d?"
+        }
       })
-    end,
-  },
+    end
+  }
 }

@@ -74,7 +74,7 @@ end
 --- One global timer tick: re-render every client that still has state and
 --- stop the timer once nothing is running (it is restarted on demand — uv
 --- timers cannot be revived with :start() only once, so always re-check).
-local redraw ---@param client vim.lsp.Client
+local redraw
 
 local function spinner_tick()
   local any_active = false
@@ -158,6 +158,14 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 nixInfo.lze.load({
   {
     "nvim-lspconfig",
+    wk = {
+      { "<leader>c", group = "[c]ode" },
+      { "<leader>c_", hidden = true },
+      { "<leader>w", group = "[w]orkspace" },
+      { "<leader>w_", hidden = true },
+      { "<leader>r", group = "[r]ename" },
+      { "<leader>r_", hidden = true }
+    },
     lsp = function(plugin)
       vim.lsp.config(plugin.name, plugin.lsp or {})
       vim.lsp.enable(plugin.name)
@@ -178,5 +186,6 @@ nixInfo.lze.load({
   { import = "config.lsp.languages.json" },
   { import = "config.lsp.languages.typescript" },
   { import = "config.lsp.languages.nulang" },
-  { import = "config.lsp.languages.cpp" }
+  { import = "config.lsp.languages.cpp" },
+  { import = "config.lsp.languages.typst" }
 })

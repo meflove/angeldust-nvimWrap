@@ -25,6 +25,60 @@ return {
       red      = '#ed8796'
     }
 
+    local lsp_palette = {
+      colors.cyan, colors.magenta, colors.blue, colors.green, colors.yellow, colors.orange, colors.red, colors.violet
+    }
+    vim.api.nvim_set_hl(0, "LualineLSPSep", { fg = "#ffffff", bg = colors.bg })
+    for i = 1, #lsp_palette do
+      vim.api.nvim_set_hl(0, "LualineLSP" .. i, { fg = lsp_palette[i], bg = colors.bg, bold = true })
+    end
+
+    local git_dir_cache = {}
+    local repo_name_cache = {}
+
+    local function find_git_dir()
+      local dir = vim.fn.expand("%:p:h")
+      local cached = git_dir_cache[dir]
+      if cached == nil then
+        local found = vim.fn.finddir(".git", dir .. ";")
+        cached = found ~= "" and vim.fn.fnamemodify(found, ":p"):gsub("/$", "") or ""
+        git_dir_cache[dir] = cached
+      end
+      return cached
+    end
+
+    local function get_repo_name()
+      local git_dir = find_git_dir()
+      if git_dir == "" then
+        return ""
+      end
+      local cached = repo_name_cache[git_dir]
+      if cached == nil then
+        cached = ""
+        local git_config = git_dir .. "/config"
+        if vim.fn.filereadable(git_config) == 1 then
+          for _, line in ipairs(vim.fn.readfile(git_config)) do
+            local url = line:match("%s+url = .+/(.+).git")
+            if url then
+              cached = url
+              break
+            end
+          end
+        end
+        repo_name_cache[git_dir] = cached
+      end
+      return cached
+    end
+
+    local git_cache_augroup = vim.api.nvim_create_augroup("lualine_git_cache", { clear = true })
+    vim.api.nvim_create_autocmd("DirChanged", {
+      group = git_cache_augroup,
+      callback = function()
+        git_dir_cache = {}
+        repo_name_cache = {}
+      end
+    })
+
     local conditions = {
       buffer_not_empty = function()
         return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
@@ -33,30 +87,9 @@ return {
         return vim.fn.winwidth(0) > 80
       end,
       check_git_workspace = function()
-        local filepath = vim.fn.expand("%:p:h")
-        local gitdir = vim.fn.finddir(".git", filepath .. ";")
-        return gitdir and #gitdir > 0 and #gitdir < #filepath
+        return find_git_dir() ~= ""
       end
     }
-
-    local function get_repo_name()
-      local git_dir = vim.fn.finddir(".git", vim.fn.expand("%:p:h") .. ";")
-      if git_dir == "" then
-        return ""
-      end
-      local git_config = git_dir .. "/config"
-      if vim.fn.filereadable(git_config) == 0 then
-        return ""
-      end
-      local config_lines = vim.fn.readfile(git_config)
-      for _, line in ipairs(config_lines) do
-        local url = line:match("%s+url = .+/(.+).git")
-        if url then
-          return url
-        end
-      end
-      return ""
-    end
 
     local config = {
       options = {
@@ -180,10 +213,6 @@ return {
           return "No Active Lsp"
         end
         local lsp_names = {}
-        local palette = {
-          colors.cyan, colors.magenta, colors.blue, colors.green, colors.yellow, colors.orange, colors.red,
-          colors.violet
-        }
         local active_clients = {}
         for _, client in ipairs(buf_clients) do
           local filetypes = client.config.filetypes
@@ -194,13 +223,9 @@ return {
         if #active_clients == 0 then
           return "No Active Lsp"
         end
-        vim.api.nvim_set_hl(0, "LualineLSPSep", { fg = "#ffffff", bg = colors.bg })
         local separator = string.format("%%#%s# • %%*", "LualineLSPSep")
         for i, client in ipairs(active_clients) do
-          local color = palette[(i - 1) % #palette + 1]
-          local hl_group = "LualineLSP" .. i
-          vim.api.nvim_set_hl(0, hl_group, { fg = color, bg = colors.bg, bold = true })
-          local formatted_client = string.format("%%#%s#%s%%*", hl_group, client.name)
+          local formatted_client = string.format("%%#%s#%s%%*", "LualineLSP" .. i, client.name)
           table.insert(lsp_names, formatted_client)
         end
         return table.concat(lsp_names, separator)
@@ -211,7 +236,7 @@ return {
 
     ins_right({
       function()
-        return "%{v:lua.require('config.util.showcmd').get()}"
+        return "%{v:lua.require('config.utils').get_showcmd()}"
       end,
       color = { fg = colors.fg }
     })

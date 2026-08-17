@@ -50,6 +50,7 @@ vim.api.nvim_create_autocmd({ "LspDetach" }, {
 
 -- disable auto-comment on enter
 vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("formatoptions", { clear = true }),
   desc = "remove formatoptions",
   callback = function()
     vim.opt.formatoptions:remove({ "c", "r", "o" })

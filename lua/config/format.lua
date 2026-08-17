@@ -1,6 +1,6 @@
 -- conform.nvim setup. runtime deps (alejandra, emmylua_formatter, ruff, shfmt, yamlfmt,
 -- fixjson, prettierd, clang-format, ...) are provided by config.specs.*.runtimePkgs.
-nixInfo.lze.load({
+return {
   {
     "conform.nvim",
     auto_enable = true,
@@ -23,6 +23,7 @@ nixInfo.lze.load({
           javascript = { "prettierd" },
           javascriptreact = { "prettierd" },
           markdown = { "prettierd" },
+          typst = { "typstyle", lsp_format = "prefer" },
           typescript = { "prettierd" },
           typescriptreact = { "prettierd" },
           cpp = { "clang-format" },
@@ -38,4 +39,4 @@ nixInfo.lze.load({
       })
     end
   }
-})
+}

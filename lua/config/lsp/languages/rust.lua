@@ -1,6 +1,6 @@
 return {
   {
-    "bacon-ls",
+    "bacon_ls",
     before = function()
       vim.diagnostic.config({ update_in_insert = true })
     end,
@@ -25,25 +25,30 @@ return {
     auto_enable = true,
     ft = { "rust" },
     lazy = false,
+    wk = {
+      { "<leader>cr", group = "[r]ustowl" },
+      { "<leader>cr_", hidden = true }
+    },
     after = function()
       require("rustowl").setup({
         auto_enable = true,
         idle_time = 300,
         client = {
           on_attach = function(_, buffer)
-            vim.keymap.set("n", "<leader>ro", function()
+            local map = function(lhs, rhs, desc)
+              vim.keymap.set("n", lhs, rhs, { buffer = buffer, desc = desc })
+            end
+            map("<leader>cro", function()
               require("rustowl").toggle(buffer)
-            end, { buffer = buffer, desc = "Toggle RustOwl" }
+            end, "Toggle RustOwl"
             )
-
-            vim.keymap.set("n", "<leader>re", function()
+            map("<leader>cre", function()
               require("rustowl").enable(buffer)
-            end, { buffer = buffer, desc = "Enable RustOwl" }
+            end, "Enable RustOwl"
             )
-
-            vim.keymap.set("n", "<leader>rd", function()
+            map("<leader>crd", function()
               require("rustowl").disable(buffer)
-            end, { buffer = buffer, desc = "Disable RustOwl" }
+            end, "Disable RustOwl"
             )
           end
         }
@@ -56,60 +61,55 @@ return {
     ft = { "rust" },
     lazy = false,
     init = function()
-      vim.g.rustaceanvim.server = {
-        on_attach = function(bufnr)
-          vim.keymap.set(
-            "n", "<leader>a",
-            function()
-              vim.cmd.RustLsp("codeAction") -- supports rust-analyzer's grouping
+      vim.g.rustaceanvim = {
+        server = {
+          on_attach = function(client, bufnr)
+            vim.keymap.set("n", "<leader>ca", function()
+              vim.cmd.RustLsp('codeAction') -- supports rust-analyzer's grouping
               -- or vim.lsp.buf.codeAction() if you don't want grouping.
-            end,
-            {
-              silent = true,
-              buffer = bufnr
-            }
-          )
-          vim.keymap.set(
-            "n",
-            "K", -- Override Neovim's built-in hover keymap with rustaceanvim's hover actions
-            function()
-              vim.cmd.RustLsp({ "hover", "actions" })
-            end,
-            { silent = true, buffer = bufnr }
-          )
-        end,
-        default_settings = {
-          -- rust-analyzer language server configuration
-          ["rust-analyzer"] = {
-            cargo = {
-              allFeatures = true,
-              loadOutDirsFromCheck = true,
-              buildScripts = {
-                enable = true
-              }
-            },
-            checkOnSave = false,
-            diagnostics = {
-              enable = false
-            },
-            procMacro = {
-              enable = true
-            },
-            files = {
-              exclude = {
-                ".direnv",
-                ".git",
-                ".jj",
-                ".github",
-                ".gitlab",
-                "bin",
-                "node_modules",
-                "target",
-                "venv",
-                ".venv"
+            end, { silent = true, buffer = bufnr, desc = "LSP: [C]ode [A]ction" }
+            )
+            vim.keymap.set(
+              "n",
+              "K", -- Override Neovim's built-in hover keymap with rustaceanvim's hover actions
+              function()
+                vim.cmd.RustLsp({ 'hover', 'actions' })
+              end,
+              { silent = true, buffer = bufnr }
+            )
+          end,
+          default_settings = {
+            ["rust-analyzer"] = {
+              cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                buildScripts = {
+                  enable = true
+                }
               },
-              -- Avoid Roots Scanned hanging, see https://github.com/rust-lang/rust-analyzer/issues/12613#issuecomment-2096386344
-              watcher = "client"
+              checkOnSave = false,
+              diagnostics = {
+                enable = false
+              },
+              procMacro = {
+                enable = true
+              },
+              files = {
+                exclude = {
+                  ".direnv",
+                  ".git",
+                  ".jj",
+                  ".github",
+                  ".gitlab",
+                  "bin",
+                  "node_modules",
+                  "target",
+                  "venv",
+                  ".venv"
+                },
+                -- Avoid Roots Scanned hanging, see https://github.com/rust-lang/rust-analyzer/issues/12613#issuecomment-2096386344
+                watcher = "client"
+              }
             }
           }
         }
