@@ -116,8 +116,12 @@ return {
         notify = {
           provider = "vim.notify"
         },
-        style = "minimal",
         ui = {
+          style = "minimal",
+          diagnostics = true,
+          sort = {
+            method = "last_used"
+          },
           jump_labels = {
             keys = {
               "a",
@@ -145,15 +149,13 @@ return {
               "."
             }
           }
-        },
-        diagnostics = true
+        }
       })
     end
   },
   {
     "kikao",
     auto_enable = true,
-    event = "BufReadPost",
     after = function()
       require("kikao").setup({
         session_file_name = nil,

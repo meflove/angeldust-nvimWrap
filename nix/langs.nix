@@ -122,6 +122,15 @@
       data = with pkgs.vimPlugins; [SchemaStore-nvim];
     };
 
+    kdl = {
+      lazy = true;
+      runtimePkgs = with pkgs; [
+        kdlfmt
+        kdl-lsp
+      ];
+      data = [];
+    };
+
     typescript = {
       lazy = true;
       runtimePkgs = with pkgs; [
@@ -136,7 +145,11 @@
 
     nulang = {
       lazy = true;
-      runtimePkgs = with pkgs; [nu-lint];
+      runtimePkgs = with pkgs; [
+        nu-lint
+        nufmt
+        nushell
+      ];
       data = [];
     };
 

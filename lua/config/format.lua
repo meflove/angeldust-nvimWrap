@@ -8,8 +8,17 @@ return {
     after = function()
       local conform = require("conform")
 
-      -- luafmt from conform doesn't work
-      conform.formatters.luafmt = { command = nixInfo("luafmt", "info", "emmylua_formatter_path") }
+      conform.formatters = {
+        -- luafmt from conform doesn't work
+        luafmt = {
+          command = nixInfo("luafmt", "info", "emmylua_formatter_path")
+        },
+        -- for formatting nuon files
+        nufmt = {
+          args = { "--stdin" },
+          stdin = true
+        }
+      }
 
       conform.setup({
         formatters_by_ft = {
@@ -17,8 +26,10 @@ return {
           python = { "ruff_format", "ruff_organize_imports" },
           nix = { "alejandra" },
           sh = { "shfmt" },
+          nu = { "nufmt" },
           yaml = { "yamlfmt", "yamlfix" },
           json = { "json_repair", "fixjson" },
+          kdl = { "kdlfmt" },
           html = { "prettierd" },
           javascript = { "prettierd" },
           javascriptreact = { "prettierd" },

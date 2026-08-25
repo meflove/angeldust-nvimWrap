@@ -22,6 +22,11 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
             experimental-features = nix-command flakes
+      - name: Find flake.nix directory
+        id: flake-dir
+        run: |
+          FLAKE_DIR=$(dirname $(find . -name "flake.nix" -not -path "*/node_modules/*" | head -1))
+          echo "dir=$FLAKE_DIR" >> $GITHUB_OUTPUT
       - name: Update flake.lock
         id: update
         run: nix flake update
@@ -30,6 +35,9 @@ jobs:
       - name: Update Nix devenv.lock
         id: update_devenv
         run: devenv update
+      - name: Run updater
+        working-directory: ${{ steps.flake-dir.outputs.dir }}
+        run: nix run .#updater
       - name: Commit
         run: |-
           if ! git diff --quiet; then

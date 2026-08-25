@@ -167,7 +167,6 @@
 
           # rust
           bacon-ls = inputs.bacon-ls.defaultPackage.${system};
-
           fenix = prev.fenix.complete.withComponents [
             "cargo"
             "clippy"
@@ -178,6 +177,9 @@
 
           # nushell LSP (straight from its flake)
           nu-lint = inputs.nu-lint.packages.${system}.default;
+
+          # kdl
+          kdl-lsp = inputs.self.packages.${system}.deps.kdl-lsp;
 
           # nixpkgs-master channel (kept for ad-hoc use)
           master = import inputs.nixpkgs-master (branchConfig system);
@@ -230,6 +232,10 @@
     packages = eachSystem (pkgs: {
       neovim = self.wrappers.neovim.wrap {inherit pkgs;};
       default = self.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
+      updater = pkgs.callPackage ./nix/updater.nix {inherit self;};
+      deps = {
+        kdl-lsp = pkgs.callPackage ./nix/packages/kdl-lsp.nix {};
+      };
     });
 
     # when consumed via a NixOS/Home-Manager config, the dependencyOverlays

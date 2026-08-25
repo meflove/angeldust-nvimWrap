@@ -184,6 +184,7 @@ nixInfo.lze.load({
   { import = "config.lsp.languages.rust" },
   { import = "config.lsp.languages.yaml" },
   { import = "config.lsp.languages.json" },
+  { import = "config.lsp.languages.kdl" },
   { import = "config.lsp.languages.typescript" },
   { import = "config.lsp.languages.nulang" },
   { import = "config.lsp.languages.cpp" },
