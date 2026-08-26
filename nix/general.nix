@@ -112,6 +112,7 @@
         # --- editor ---
         ts-comments-nvim
         flash
+        nvim-hlslens
         hover-nvim
 
         # --- git ---

@@ -2,6 +2,9 @@ result
 .claude
 .cache
 
+# trash
+ignore/
+
 # Devenv
 .devenv*
 devenv.local.nix

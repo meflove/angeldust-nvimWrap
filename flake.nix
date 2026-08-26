@@ -73,7 +73,7 @@
     };
 
     plugins-flash = {
-      url = "github:folke/flash.nvim/c92888d432bebeb145dad09c07ab65cc7c577184";
+      url = "github:folke/flash.nvim";
       flake = false;
     };
 
