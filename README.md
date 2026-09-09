@@ -1,7 +1,8 @@
+> [!NOTE]
+> **Moved to [Codeberg](https://codeberg.org/angeldust/angeldust-nvimWrap)** — GitHub now serves as a mirror.
+
 # angeldust-nvimWrap
 
-[![push to cachix](https://github.com/meflove/angeldust-nvimWrap/actions/workflows/push-to-cachix.yml/badge.svg)](https://github.com/meflove/angeldust-nvimWrap/actions/workflows/push-to-cachix.yml)
-[![update locks](https://github.com/meflove/angeldust-nvimWrap/actions/workflows/update-flake-lock.yml/badge.svg)](https://github.com/meflove/angeldust-nvimWrap/actions/workflows/update-flake-lock.yml)
 [![cachix](https://img.shields.io/badge/cache-meflove.cachix.org-0096ff?logo=cachix)](https://meflove.cachix.org)
 [![neovim](https://img.shields.io/badge/neovim-nightly-57a143?logo=neovim&logoColor=white)](https://github.com/neovim/neovim)
 [![nixpkgs](https://img.shields.io/badge/nixpkgs-unstable-006899?logo=nixos&logoColor=white)](https://github.com/NixOS/nixpkgs)
