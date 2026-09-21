@@ -6,8 +6,8 @@
   src = fetchFromGitHub {
     owner = "kdl-org";
     repo = "kdl-rs";
-    rev = "ef1c3251020d574c065777450831912ac63d363b";
-    hash = "sha256-bPW+NNtlWKisi3LHmYVhNPdI+UIbY+FWw8RcDEtl7fw=";
+    rev = "30e332b446081b825159523276e13346cf3495de";
+    hash = "sha256-8E9sfdNFgycdPAVJUBr4w6SZTDWQxCpMYm+qWLbUfgs=";
   };
 
   cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
