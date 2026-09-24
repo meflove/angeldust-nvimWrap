@@ -6,7 +6,7 @@ permissions:
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 0 * * 1,4  # Run twice a week
+    - cron: 0 0 * * 1,4 # Run twice a week
 jobs:
   locker:
     name: Update Flake.lock

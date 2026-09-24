@@ -11,8 +11,8 @@
 #                                 collected into config.info by nvim-lib.nix)
 #   neovim-unwrapped          ->  config.package
 inputs: {
-  wlib,
   pkgs,
+  wlib,
   ...
 }: {
   imports = [

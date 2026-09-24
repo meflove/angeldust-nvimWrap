@@ -1,6 +1,7 @@
 {
-  pkgs,
   lib,
+  pkgs,
+  inputs,
   ...
 }: {
   name = "nixland";
@@ -36,12 +37,10 @@
       trim-trailing-whitespace.enable = true;
       detect-private-keys.enable = true;
 
-      # Nix specific hooks
-      alejandra.enable = true;
-      statix.enable = true;
-
-      # Lua specific hooks
-      lua-ls.enable = true;
+      treefmt = {
+        enable = true;
+        package = inputs.self-repo.formatter.${pkgs.stdenv.hostPlatform.system};
+      };
     };
   };
 }

@@ -4,10 +4,10 @@
 # BirdeeHub/birdeevim.
 {
   config,
-  wlib,
   lib,
   options,
   inputs,
+  wlib,
   ...
 }: {
   # makes inputs named `plugins-<name>` available as

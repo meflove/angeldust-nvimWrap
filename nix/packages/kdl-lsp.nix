@@ -1,7 +1,7 @@
 {
   lib,
-  rustPlatform,
   fetchFromGitHub,
+  rustPlatform,
 }: let
   src = fetchFromGitHub {
     owner = "kdl-org";
@@ -13,7 +13,7 @@
   cargoToml = lib.importTOML "${src.outPath}/Cargo.toml";
   version = "${cargoToml.package.version}-${lib.substring 0 7 src.rev}";
 in
-  rustPlatform.buildRustPackage (finalAttrs: {
+  rustPlatform.buildRustPackage (_finalAttrs: {
     inherit src version;
     pname = "kdl-lsp";
 

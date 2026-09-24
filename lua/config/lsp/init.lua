@@ -27,6 +27,7 @@ local spinner_timer ---@type uv.uv_timer_t?
 
 --- Redraw the progress message for one client. Returns true while it still
 --- has unfinished tokens.
+---@return boolean has_active
 local function render_progress(client)
   local state = progress[client.id]
   if not state or not state.entries or #state.entries == 0 then
@@ -74,7 +75,7 @@ end
 --- One global timer tick: re-render every client that still has state and
 --- stop the timer once nothing is running (it is restarted on demand — uv
 --- timers cannot be revived with :start() only once, so always re-check).
-local redraw
+local redraw ---@type fun(client): boolean
 
 local function spinner_tick()
   local any_active = false
@@ -86,14 +87,17 @@ local function spinner_tick()
       progress[client_id] = nil
     end
   end
-  if not any_active then
+  -- the tick runs via vim.schedule_wrap, so VimLeavePre may have closed and
+  -- nilled the timer between queuing this tick and running it
+  if not any_active and spinner_timer then
     spinner_timer:stop()
   end
 end
 
 local function start_spinner_timer()
   if not spinner_timer then
-    spinner_timer = vim.uv.new_timer()
+    -- new_timer() is typed nullable (fails only on EMFILE), cast it off
+    spinner_timer = vim.uv.new_timer() --[[@as uv.uv_timer_t]]
   end
   -- a stopped uv timer stays allocated; :is_active() guards a re-:start()
   if not spinner_timer:is_active() then

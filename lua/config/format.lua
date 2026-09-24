@@ -17,6 +17,14 @@ return {
         nufmt = {
           args = { "--stdin" },
           stdin = true
+        },
+        -- sort nix args, attrs, etc
+        pedantix = {
+          command = "pedantix",
+          args = {
+            "$FILENAME"
+          },
+          stdin = false
         }
       }
 
@@ -24,7 +32,7 @@ return {
         formatters_by_ft = {
           lua = { "luafmt" },
           python = { "ruff_format", "ruff_organize_imports" },
-          nix = { "alejandra" },
+          nix = { "alejandra", "pedantix" },
           sh = { "shfmt" },
           nu = { "nufmt" },
           yaml = { "yamlfmt", "yamlfix" },

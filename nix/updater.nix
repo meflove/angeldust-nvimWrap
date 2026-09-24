@@ -1,7 +1,7 @@
 {
-  self,
-  pkgs,
   lib,
+  pkgs,
+  self,
 }: let
   excludePackages = [
     (baseNameOf ./.)

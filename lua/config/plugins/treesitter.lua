@@ -188,45 +188,30 @@ return {
 
       -- vim way: ; goes to the direction you were moving.
       vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move, { desc = "repeat last move" })
-      vim.keymap.set(
-        { "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite,
-        {
-          desc = "repeat last move (opposite)"
-        }
-      )
+      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite, {
+        desc = "repeat last move (opposite)"
+      })
 
       -- Optionally, make builtin f, F, t, T also repeatable with ; and ,
       -- NOTE: flash.nvim's char mode is enabled by default and loads later
       -- (DeferredUIEnter), so its own f/F/t/T/;/, mappings override these
       -- wrappers in a real session. see the flash spec in editor.lua.
-      vim.keymap.set(
-        { "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr,
-        {
-          expr = true,
-          desc = "find char (repeatable)"
-        }
-      )
-      vim.keymap.set(
-        { "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr,
-        {
-          expr = true,
-          desc = "find char backwards (repeatable)"
-        }
-      )
-      vim.keymap.set(
-        { "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr,
-        {
-          expr = true,
-          desc = "till char (repeatable)"
-        }
-      )
-      vim.keymap.set(
-        { "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr,
-        {
-          expr = true,
-          desc = "till char backwards (repeatable)"
-        }
-      )
+      vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, {
+        expr = true,
+        desc = "find char (repeatable)"
+      })
+      vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, {
+        expr = true,
+        desc = "find char backwards (repeatable)"
+      })
+      vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, {
+        expr = true,
+        desc = "till char (repeatable)"
+      })
+      vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, {
+        expr = true,
+        desc = "till char backwards (repeatable)"
+      })
 
       -- NOTE: for more textobjects options, see the following link.
       -- This template is using the new `main` branch of the repo.

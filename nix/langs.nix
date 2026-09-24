@@ -18,11 +18,38 @@
           # lua
           ''function(type, path) return [[import ${./nixd.nix} "${pkgs.stdenv.hostPlatform.system}" "]] .. type .. [[" ]] .. (path or "./.") end'';
       };
-      runtimePkgs = with pkgs; [
+      runtimePkgs = with pkgs; let
+        pedantix-config = pkgs.writers.writeTOML "pedantix.toml" {
+          preset = "nixos-module";
+          formatter = "alejandra";
+
+          args = {
+            sort = true;
+          };
+          attrs = {
+            sort = false;
+          };
+          inherits = {
+            sort = false;
+          };
+          lets = {
+            sort = false;
+          };
+        };
+        pedantix-with-config =
+          pkgs.writeShellScriptBin "pedantix"
+          # bash
+          ''
+            exec ${lib.getExe pkgs.pedantix} \
+              --config=${pedantix-config} \
+              "$@"
+          '';
+      in [
         nixd
         nil
         alejandra
         statix
+        pedantix-with-config
       ];
       data = [];
     };

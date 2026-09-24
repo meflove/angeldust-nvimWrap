@@ -46,6 +46,13 @@
       url = "github:molybdenumsoftware/statix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pedantix = {
+      url = "github:swarsel/pedantix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
 
     # --- Nushell LSP ---------------------------------------------------------
     nu-lint = {
@@ -126,8 +133,8 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
+    self,
     wrappers,
     ...
   } @ inputs: let
@@ -146,6 +153,17 @@
         _final: prev: let
           inherit (prev.stdenv.hostPlatform) system;
         in {
+          # nix
+          # TODO: drop the wrapper once pedantix supports |>
+          pedantix = prev.writeShellScriptBin "pedantix" ''
+            code=0
+            ${prev.lib.getExe inputs.pedantix.packages.${prev.stdenv.hostPlatform.system}.pedantix-wrapped} "$@" || code=$?
+            if [ "$code" -eq 2 ]; then
+              exit 0
+            fi
+            exit "$code"
+          '';
+
           # lua
           inherit
             (inputs.emmylua-ls.packages.${system})
@@ -205,7 +223,17 @@
     module = nixpkgs.lib.modules.importApply ./nix/module.nix inputs;
     wrapper = wrappers.lib.evalModule module;
 
-    treefmtEval = eachSystem (pkgs: inputs.treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix);
+    treefmtEval = eachSystem (pkgs:
+      inputs.treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix {
+        inherit
+          (nixpkgs)
+          lib
+          ;
+        inherit
+          pkgs
+          inputs
+          ;
+      }));
   in {
     formatter = eachSystem (pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
     checks = eachSystem (pkgs: {

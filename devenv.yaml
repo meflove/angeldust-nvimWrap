@@ -1,5 +1,7 @@
 ---
 inputs:
+  self-repo:
+    url: path:.
   git-hooks:
     url: github:cachix/git-hooks.nix
     inputs:
@@ -7,3 +9,4 @@ inputs:
         follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
+prompt_prefix: false

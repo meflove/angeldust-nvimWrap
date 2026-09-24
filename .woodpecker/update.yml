@@ -1,3 +1,4 @@
+---
 when:
   - event: cron
   - event: manual
@@ -29,7 +30,7 @@ steps:
       - git config user.name "John Nix"
       - git config user.email "john-nix@noreply.codeberg.org"
       - git remote set-url origin ssh://git@codeberg.org/angeldust/angeldust-nvimWrap.git
-      - |
+      - |-
         git add .
         if ! git diff --cached --quiet; then
           git commit -m "Flake.lock and devenv.lock update"
