@@ -1,5 +1,5 @@
 > [!NOTE]
-> **Moved to [Codeberg](https://codeberg.org/angeldust/angeldust-nvimWrap)** — GitHub now serves as a mirror.
+> **Moved to [tangled](https://tangled.org/did:plc:tnajjjjypb4b57xv7tjpv3is)** — [GitHub](https://github.com/meflove/angeldust-nvimWrap) and [Codeberg](https://codeberg.org/angeldust/angeldust-nvimWrap) now serve as mirrors.
 
 # angeldust-nvimWrap
 
@@ -36,7 +36,7 @@
   cmdline completion.
 - 🦀 **Deep Rust setup** — rust-analyzer (nightly), bacon-ls diagnostics as you
   type, RustOwl lifetime/ownership hints, crates.nvim in `Cargo.toml`.
-- ❄️ **Nix-native editing** — nixd + nil, alejandra / statix / deadnix, and nixd
+- ❄️ **Nix-native editing** — nixd + nil, alejandra / statix / deadnix / pedantix, and nixd
   autocompleting the _edited flake's_ NixOS / Home-Manager options (auto-detected,
   no hardcoded hostnames).
 - 🎮 The statusline awards XP for editing ([triforce.nvim]). Yes, really.
@@ -48,13 +48,13 @@ Everything else — including Neovim itself — is in the flake.
 
 ```bash
 # try it without installing
-nix run github:meflove/angeldust-nvimWrap
+nix run git+https://tangled.org/did:plc:tnajjjjypb4b57xv7tjpv3is
 
 # install into your profile
-nix profile install github:meflove/angeldust-nvimWrap
+nix profile install git+https://tangled.org/did:plc:tnajjjjypb4b57xv7tjpv3is
 
 # build locally
-nix build github:meflove/angeldust-nvimWrap
+nix build git+https://tangled.org/did:plc:tnajjjjypb4b57xv7tjpv3is
 ```
 
 > The first build compiles a lot (all treesitter grammars, a Rust toolchain,
@@ -68,7 +68,7 @@ nix build github:meflove/angeldust-nvimWrap
 ### NixOS / Home Manager
 
 ```nix
-inputs.angeldust-nvimWrap.url = "github:meflove/angeldust-nvimWrap";
+inputs.angeldust-nvimWrap.url = "git+https://tangled.org/did:plc:tnajjjjypb4b57xv7tjpv3is";
 ```
 
 As an overlay — self-contained, replaces `pkgs.neovim` with the wrapped editor:
@@ -110,7 +110,9 @@ home.sessionVariables.EDITOR = lib.getExe config.wrappers.neovim.wrapper;
 │   ├── general.nix        # lze engine, colorscheme and the bulk of the editor
 │   ├── langs.nix          # per-language specs, each with its own mainInfo
 │   ├── nixd.nix           # runtime-evaluated nixd expr: the edited flake's options
-│   └── treefmt.nix        # `nix fmt` — alejandra, statix, deadnix, luafmt, prettier
+│   ├── updater.nix        # bulk nix-update for nix/packages/* (run by CI)
+│   ├── packages/          # extra packages built from source (kdl-lsp)
+│   └── treefmt.nix        # `nix fmt` — alejandra, pedantix, statix, deadnix, luafmt, prettier
 ├── lua/config/
 │   ├── init.lua           # nixInfo bridge + lze handler registration
 │   ├── options.lua        # vim.opt / vim.o
@@ -127,7 +129,6 @@ home.sessionVariables.EDITOR = lib.getExe config.wrappers.neovim.wrapper;
 │   └── utils/             # lze handlers: auto_enable, which-key, lsp ft fallback
 ├── after/queries/         # custom treesitter query injections
 ├── devenv.nix             # dev shell + git hooks (prek)
-└── .github/workflows/     # cachix push, lock updates, codeberg/tangled mirror
 ```
 
 How the two halves talk to each other:
@@ -194,18 +195,19 @@ general.data = [ config.nvim-lib.neovimPlugins.myplugin ];
 | Language      | LSP                                        | Formatting                 | Linting            | Extra plugins                           |
 | ------------- | ------------------------------------------ | -------------------------- | ------------------ | --------------------------------------- |
 | Lua           | emmylua_ls                                 | luafmt (emmylua_formatter) | —                  | lazydev.nvim                            |
-| Nix           | nixd, nil                                  | alejandra                  | statix             | —                                       |
+| Nix           | nixd, nil                                  | alejandra, pedantix        | statix             | —                                       |
 | Python        | ty, ruff                                   | ruff (format + imports)    | —                  | —                                       |
 | Rust          | rust-analyzer (nightly), bacon-ls, RustOwl | rustfmt (LSP fallback)     | clippy (via bacon) | rustaceanvim, crates.nvim, rustowl-nvim |
 | TOML          | taplo                                      | —                          | —                  | crates.nvim                             |
 | TypeScript/JS | typescript-language-server                 | prettierd                  | eslint_d           | typescript-tools.nvim                   |
 | JSON          | vscode-json-languageserver                 | fixjson, json_repair       | jsonlint           | SchemaStore.nvim                        |
+| KDL           | kdl-lsp                                    | kdlfmt                     | —                  | —                                       |
 | YAML          | yaml-language-server                       | yamlfmt, yamlfix           | yamllint           | —                                       |
 | Shell         | bash-language-server                       | shfmt                      | shellcheck         | —                                       |
 | C / C++       | clangd                                     | clang-format               | clangtidy          | clangd_extensions.nvim                  |
 | Markdown      | marksman                                   | prettierd                  | —                  | markview.nvim, markdown-preview.nvim    |
 | Typst         | tinymist                                   | typstyle                   | —                  | typst-preview.nvim                      |
-| Nushell       | nu-lint                                    | —                          | —                  | —                                       |
+| Nushell       | nu-lint                                    | nufmt                      | —                  | —                                       |
 
 Also on the wrapper's `PATH` for everything else: `ripgrep`, `fd`,
 `universal-ctags`, `tree-sitter`, `sqlite`, `unzip`, `ghostscript`, `tectonic`,
@@ -275,21 +277,22 @@ which-key groups: `c` code, `d` diff, `g` git, `m` markdown, `r` rename,
 ## 🛠️ Development
 
 ```bash
-nix develop          # or: direnv allow — devenv shell with prek git hooks
-nix fmt              # treefmt: alejandra, statix, deadnix, luafmt, prettier
+nix develop          # or: devenv allow — devenv shell with prek git hooks
+nix fmt              # treefmt: alejandra, statix, deadnix, pedantix, luafmt, prettier
 nix flake check      # formatting check
 nix build .#neovim   # local build
 ```
 
-The dev shell runs [prek] hooks on commit: alejandra, statix, luafmt, lua-ls,
+The dev shell runs [prek] hooks on commit: treefmt,
 end-of-file / trailing-whitespace fixes, private-key detection.
 
 ## 🔄 CI
 
-- **push-to-cachix** — every push to `main` builds the wrapper and pushes it to
-  [meflove.cachix.org](https://meflove.cachix.org).
-- **update-flake-lock** — Mon & Thu: bumps `flake.lock` and `devenv.lock`.
-- **mirror** — pushes `main` to [Codeberg] and Tangled.
+- **push-to-cachix** — every push / PR on `main` builds the wrapper and pushes
+  it to [meflove.cachix.org](https://meflove.cachix.org).
+- **update-flake-lock** — Mon & Thu: bumps `flake.lock`, `devenv.lock` and
+  `nix/packages` (via `nix run .#updater`).
+- **mirror** — pushes `main` to [Codeberg] and [GitHub].
 
 ## 🙏 Acknowledgements
 
@@ -311,5 +314,5 @@ end-of-file / trailing-whitespace fixes, private-key detection.
 [blink.cmp]: https://github.com/Saghen/blink.cmp
 [triforce.nvim]: https://github.com/gisketch/triforce.nvim
 [prek]: https://github.com/j178/prek
-[jujutsu]: https://github.com/martinvonz/jj
 [codeberg]: https://codeberg.org/angeldust/angeldust-nvimWrap
+[github]: https://github.com/meflove/angeldust-nvimWrap

@@ -1,0 +1,19 @@
+---
+when:
+  - event: [push, manual, pull_request]
+    branch: [main]
+engine: microvm
+image: nixos
+dependencies: [cachix]
+steps:
+  - name: Configure nix
+    command: |
+      export NIX_CONFIG="experimental-features = nix-command flakes
+      access-tokens = github.com=$GH_TOKEN"
+  - name: Configure cachix
+    command: |
+      cachix authtoken "$CACHIX_AUTH_TOKEN"
+      cachix use meflove
+      cachix use nix-community
+  - name: Build and push
+    command: nix build -L --no-link --print-out-paths .#default | cachix push meflove
