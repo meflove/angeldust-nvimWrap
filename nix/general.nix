@@ -131,9 +131,10 @@
         marks-nvim
         todo-comments-nvim
         trouble-nvim
-        nvzone-volt
         neural-open
-        triforce
+        # FIXME: 404 error
+        # triforce
+        # nvzone-volt
         tiny-cmdline-nvim
 
         # --- utilities ---

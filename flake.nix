@@ -121,10 +121,11 @@
       flake = false;
     };
 
-    plugins-triforce = {
-      url = "github:gisketch/triforce.nvim";
-      flake = false;
-    };
+    # FIXME: 404 error
+    # plugins-triforce = {
+    #   url = "github:gisketch/triforce.nvim";
+    #   flake = false;
+    # };
 
     plugins-clangd-extensions = {
       url = "git+https://git.sr.ht/~chinmay/clangd_extensions.nvim";

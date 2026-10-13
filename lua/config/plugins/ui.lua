@@ -195,32 +195,33 @@ return {
     after = function()
       require("trouble").setup()
     end
-  },
-  {
-    "volt",
-    auto_enable = true,
-    dep_of = { "triforce" }
-  },
-  {
-    "triforce",
-    auto_enable = true,
-    dep_of = { "lualine" },
-    cmd = "Triforce",
-    event = "DeferredUIEnter",
-    keys = {
-      {
-        "<leader>I",
-        "<cmd>Triforce profile<cr>",
-        desc = "Show Triforce Stats"
-      }
-    },
-    after = function()
-      require("triforce").setup({
-        keymap = {
-          -- Set to nil to disable default keymap
-          show_profile = nil
-        }
-      })
-    end
   }
+  -- FIXME: 404 error
+  -- {
+  --   "volt",
+  --   auto_enable = true,
+  --   dep_of = { "triforce" }
+  -- }
+  -- {
+  --   "triforce",
+  --   auto_enable = true,
+  --   dep_of = { "lualine" },
+  --   cmd = "Triforce",
+  --   event = "DeferredUIEnter",
+  --   keys = {
+  --     {
+  --       "<leader>I",
+  --       "<cmd>Triforce profile<cr>",
+  --       desc = "Show Triforce Stats"
+  --     }
+  --   },
+  --   after = function()
+  --     require("triforce").setup({
+  --       keymap = {
+  --         -- Set to nil to disable default keymap
+  --         show_profile = nil
+  --       }
+  --     })
+  --   end
+  -- }
 }

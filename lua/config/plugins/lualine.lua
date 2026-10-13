@@ -287,16 +287,17 @@ return {
       cond = conditions.hide_in_width
     })
 
-    ins_right({
-      "triforce",
-      level = {
-        enabled = true,
-        prefix = "Lv.",
-        show = { level = true, bar = true, percent = false, xp = false },
-        bar = { length = 6, chars = { filled = "█", empty = "░" } }
-      },
-      streak = { enabled = false, icon = "", show_days = true }
-    })
+    -- FIXME: 404 error
+    -- ins_right({
+    --   "triforce",
+    --   level = {
+    --     enabled = true,
+    --     prefix = "Lv.",
+    --     show = { level = true, bar = true, percent = false, xp = false },
+    --     bar = { length = 6, chars = { filled = "█", empty = "░" } }
+    --   },
+    --   streak = { enabled = false, icon = "", show_days = true }
+    -- })
 
     ins_right({
       function()

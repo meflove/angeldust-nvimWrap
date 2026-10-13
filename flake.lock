@@ -832,22 +832,6 @@
         "type": "github"
       }
     },
-    "plugins-triforce": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1790998548,
-        "narHash": "sha256-LPm6mno/fgMyVo0ujtbhAa+RX26g2Z8C2r8xfjPWHKU=",
-        "owner": "gisketch",
-        "repo": "triforce.nvim",
-        "rev": "c01fadb96ffbe9334efedd38b80ba3fa368bf869",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gisketch",
-        "repo": "triforce.nvim",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "bacon-ls": "bacon-ls",
@@ -871,7 +855,6 @@
         "plugins-neural-open": "plugins-neural-open",
         "plugins-rooter": "plugins-rooter",
         "plugins-tiny-inline-diagnostic": "plugins-tiny-inline-diagnostic",
-        "plugins-triforce": "plugins-triforce",
         "rustowl": "rustowl",
         "statix": "statix",
         "treefmt-nix": "treefmt-nix",
