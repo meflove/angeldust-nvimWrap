@@ -1,67 +1,99 @@
+# DO-NOT-EDIT. This file was auto-generated using github:denful/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
   description = "Angeldust's neovim flake, built on nix-wrapper-modules (migrated from nixCats)";
 
+  nixConfig = {
+    extra-substituters = [ "https://meflove.cachix.org" ];
+    extra-trusted-public-keys = [ "meflove.cachix.org-1:daXeLaZBNNJOngNUDEoylRfvtai2uSFOqdg29fN+7N8=" ];
+  };
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs";
-
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    bacon-ls = {
+      url = "github:crisidev/bacon-ls";
+      inputs = {
+        naersk.inputs.fenix.follows = "fenix";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
-
-    # the wrapper itself
-    wrappers = {
-      url = "github:BirdeeHub/nix-wrapper-modules";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # newer-than-nixpkgs neovim
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
-    };
-
-    # --- Lua tooling -------------------------------------------
     emmylua-ls = {
       url = "github:EmmyLuaLs/emmylua-analyzer-rust";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # --- Rust toolchain + tooling -------------------------------------------
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    bacon-ls = {
-      url = "github:crisidev/bacon-ls";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flake-file = {
+      url = "github:denful/flake-file";
     };
-    rustowl = {
-      url = "github:nix-community/rustowl-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs-lib";
     };
-
-    # --- Nix tooling ---------------------------------------------------------
-    statix = {
-      url = "github:molybdenumsoftware/statix";
+    import-tree = {
+      url = "github:denful/import-tree";
+    };
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    nixpkgs = {
+      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    };
+    nixpkgs-lib = {
+      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    };
+    nixpkgs-master = {
+      url = "github:nixos/nixpkgs";
+    };
+    nu-lint = {
+      url = "git+https://codeberg.org/wvhulle/nu-lint";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pedantix = {
       url = "github:swarsel/pedantix";
       inputs = {
+        flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "treefmt-nix";
       };
     };
-
-    # --- Nushell LSP ---------------------------------------------------------
-    nu-lint = {
-      url = "git+https://codeberg.org/wvhulle/nu-lint";
-      inputs.nixpkgs.follows = "nixpkgs";
+    plugins-bafa = {
+      url = "github:mistweaverco/bafa.nvim";
+      flake = false;
     };
-
-    # --- lazy-loading engine (fetched from source to always get the latest) ---
-    # these two are already in nixpkgs, but pinning them here guarantees freshness.
+    plugins-blink-cmp-copilot = {
+      url = "github:giuxtaposition/blink-cmp-copilot";
+      flake = false;
+    };
+    plugins-clangd-extensions = {
+      url = "git+https://git.sr.ht/~chinmay/clangd_extensions.nvim";
+      flake = false;
+    };
+    plugins-ctags = {
+      url = "github:wsdjeg/ctags.nvim";
+      flake = false;
+    };
+    plugins-deltaview = {
+      url = "github:kokusenz/deltaview.nvim";
+      flake = false;
+    };
+    plugins-flash = {
+      url = "github:folke/flash.nvim";
+      flake = false;
+    };
+    plugins-job = {
+      url = "github:wsdjeg/job.nvim";
+      flake = false;
+    };
+    plugins-kikao = {
+      url = "github:mistweaverco/kikao.nvim";
+      flake = false;
+    };
     plugins-lze = {
       url = "github:BirdeeHub/lze";
       flake = false;
@@ -70,215 +102,49 @@
       url = "github:BirdeeHub/lzextras";
       flake = false;
     };
-
-    # --- plugins fetched straight from source (auto-built via plugins-<name>) -
-    # any input named `plugins-<name>` is picked up by `config.nvim-lib.pluginsFromPrefix`
-    # in module.nix and becomes available as `config.nvim-lib.neovimPlugins.<name>`.
-    plugins-tiny-inline-diagnostic = {
-      url = "github:rachartier/tiny-inline-diagnostic.nvim";
-      flake = false;
-    };
-
-    plugins-flash = {
-      url = "github:folke/flash.nvim";
-      flake = false;
-    };
-
-    plugins-blink-cmp-copilot = {
-      url = "github:giuxtaposition/blink-cmp-copilot";
-      flake = false;
-    };
-
-    plugins-bafa = {
-      url = "github:mistweaverco/bafa.nvim";
-      flake = false;
-    };
-    plugins-kikao = {
-      url = "github:mistweaverco/kikao.nvim";
-      flake = false;
-    };
-
     plugins-neural-open = {
       url = "github:dtormoen/neural-open.nvim";
-      flake = false;
-    };
-
-    plugins-ctags = {
-      url = "github:wsdjeg/ctags.nvim";
       flake = false;
     };
     plugins-rooter = {
       url = "github:wsdjeg/rooter.nvim";
       flake = false;
     };
-    plugins-job = {
-      url = "github:wsdjeg/job.nvim";
+    plugins-tiny-inline-diagnostic = {
+      url = "github:rachartier/tiny-inline-diagnostic.nvim";
       flake = false;
     };
-
-    plugins-deltaview = {
-      url = "github:kokusenz/deltaview.nvim";
-      flake = false;
-    };
-
-    # FIXME: 404 error
-    # plugins-triforce = {
-    #   url = "github:gisketch/triforce.nvim";
-    #   flake = false;
-    # };
-
-    plugins-clangd-extensions = {
-      url = "git+https://git.sr.ht/~chinmay/clangd_extensions.nvim";
-      flake = false;
-    };
-  };
-
-  outputs = {
-    nixpkgs,
-    self,
-    wrappers,
-    ...
-  } @ inputs: let
-    systems = [
-      "x86_64-linux"
-    ];
-
-    # Overlays applied to the nixpkgs used to BUILD neovim, so that the extra
-    # tools (fenix, bacon, statix, nu-lint, ...) are visible as `pkgs.<name>`
-    # inside module.nix's `runtimePkgs`.
-    dependencyOverlays = [
-      inputs.fenix.overlays.default
-      inputs.rustowl.overlays.default
-      (import "${inputs.statix}/overlay.nix")
-      (
-        _final: prev: let
-          inherit (prev.stdenv.hostPlatform) system;
-        in {
-          # nix
-          # TODO: drop the wrapper once pedantix supports |>
-          pedantix = prev.writeShellScriptBin "pedantix" ''
-            code=0
-            ${prev.lib.getExe inputs.pedantix.packages.${prev.stdenv.hostPlatform.system}.pedantix-wrapped} "$@" || code=$?
-            if [ "$code" -eq 2 ]; then
-              exit 0
-            fi
-            exit "$code"
-          '';
-
-          # lua
-          inherit
-            (inputs.emmylua-ls.packages.${system})
-            emmylua_ls
-            emmylua_check
-            ;
-          emmylua_formatter = let
-            src = inputs.emmylua-ls;
-            cargoToml = fromTOML (builtins.readFile "${src}/crates/emmylua_formatter/Cargo.toml");
-          in
-            prev.rustPlatform.buildRustPackage {
-              pname = cargoToml.package.name;
-              version = cargoToml.package.version;
-              inherit src;
-              cargoLock.lockFile = src + "/Cargo.lock";
-              buildAndTestSubdir = "crates/emmylua_formatter";
-              strictDeps = true;
-            };
-
-          # rust
-          bacon-ls = inputs.bacon-ls.defaultPackage.${system};
-          fenix = prev.fenix.complete.withComponents [
-            "cargo"
-            "clippy"
-            "rust-src"
-            "rustc"
-            "rustfmt"
-          ];
-
-          # nushell LSP (straight from its flake)
-          nu-lint = inputs.nu-lint.packages.${system}.default;
-
-          # kdl
-          kdl-lsp = inputs.self.packages.${system}.deps.kdl-lsp;
-
-          # nixpkgs-master channel (kept for ad-hoc use)
-          master = import inputs.nixpkgs-master (branchConfig system);
-        }
-      )
-    ];
-
-    branchConfig = system: {
-      overlays = dependencyOverlays;
-      config = {
-        allowBroken = true;
-        allowInsecure = true;
-        allowUnfree = true;
+    rustowl = {
+      url = "github:nix-community/rustowl-flake";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
       };
-      inherit system;
     };
-
-    # Build a pkgs set with our overlays + allowUnfree for a given system.
-    mkPkgs = system: import nixpkgs (branchConfig system);
-
-    eachSystem = f: nixpkgs.lib.genAttrs systems (system: f (mkPkgs system));
-
-    module = nixpkgs.lib.modules.importApply ./nix/module.nix inputs;
-    wrapper = wrappers.lib.evalModule module;
-
-    treefmtEval = eachSystem (pkgs:
-      inputs.treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix {
-        inherit
-          (nixpkgs)
-          lib
-          ;
-        inherit
-          pkgs
-          inputs
-          ;
-      }));
-  in {
-    formatter = eachSystem (pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper);
-    checks = eachSystem (pkgs: {
-      formatting = treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.check self;
-    });
-
-    wrapperModules = {
-      neovim = module;
-      default = self.wrapperModules.neovim;
+    statix = {
+      url = "github:molybdenumsoftware/statix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        import-tree.follows = "import-tree";
+        nixpkgs.follows = "nixpkgs";
+        treefmt.follows = "treefmt";
+      };
     };
-
+    treefmt = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     wrappers = {
-      neovim = wrapper.config;
-      default = self.wrappers.neovim;
-    };
-
-    overlays = {
-      neovim = _final: prev: {
-        neovim = self.wrappers.neovim.wrap {pkgs = mkPkgs prev.stdenv.hostPlatform.system;};
-      };
-      default = self.overlays.neovim;
-    };
-
-    packages = eachSystem (pkgs: {
-      neovim = self.wrappers.neovim.wrap {inherit pkgs;};
-      default = self.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
-      updater = pkgs.callPackage ./nix/updater.nix {inherit self;};
-      deps = {
-        kdl-lsp = pkgs.callPackage ./nix/packages/kdl-lsp.nix {};
-      };
-    });
-
-    # when consumed via a NixOS/Home-Manager config, the dependencyOverlays
-    # above must be applied to that config's nixpkgs for fenix/bacon/... to appear.
-    nixosModules = {
-      default = self.nixosModules.neovim;
-      neovim = wrappers.lib.getInstallModule {
-        name = "neovim";
-        value = module;
-      };
-    };
-    homeModules = {
-      default = self.homeModules.neovim;
-      neovim = self.nixosModules.neovim;
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
+  outputs =
+    inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./nix/parts);
 }

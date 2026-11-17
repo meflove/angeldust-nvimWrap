@@ -22,6 +22,7 @@ return {
         pedantix = {
           command = "pedantix",
           args = {
+            "--set on-parse-error='skip'",
             "$FILENAME"
           },
           stdin = false

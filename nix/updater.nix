@@ -3,12 +3,9 @@
   pkgs,
   self,
 }: let
-  excludePackages = [
-    (baseNameOf ./.)
-    "neovim"
-    "default"
-    "updater"
-  ];
+  system = pkgs.stdenv.hostPlatform.system;
+
+  excludePackages = [];
 
   isDerivation = pkg: builtins.isAttrs pkg && ((pkg ? type && pkg.type == "derivation") || (pkg ? drvPath));
 
@@ -43,7 +40,7 @@
   in
     version == "local";
 
-  ourPackages = self.packages.${pkgs.stdenv.hostPlatform.system} or {};
+  ourPackages = self.legacyPackages.${system}.deps or {};
   allDerivations = getDerivations ourPackages;
 
   packagesToUpdate =
@@ -96,7 +93,7 @@ in
 
     for name in ${toString packagesToUpdate}; do
       nix_update_cmd="${lib.getExe quietNixUpdate}"
-      cmd="cd $PWD && $nix_update_cmd --flake packages.${pkgs.stdenv.hostPlatform.system}.$name --version=branch"
+      cmd="cd $PWD && $nix_update_cmd --flake legacyPackages.${system}.deps.$name --version=branch"
 
       COMMANDS+=("$cmd")
       PACKAGE_NAMES+=("$name")
